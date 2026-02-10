@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="weather-container">
+        <!-- Header -->
+        <div class="header">
+            <h1><i class="fas fa-cloud-sun"></i> Weather App</h1>
+            <p class="subtitle">Get real-time weather information</p>
+        </div>
+
+        <!-- API Key Notice (shown when API key is missing) -->
+        <div id="apiKeyNotice" class="api-key-notice" style="display:none;">
+            <div style="margin-bottom:8px;"><strong>API key missing:</strong> Add your OpenWeatherMap API key below or see README for details.</div>
+            <input id="apiKeyInput" class="api-key-input" type="text" placeholder="Enter OpenWeatherMap API key" />
+            <div id="apiKeyStatus" class="api-key-status" aria-live="polite"></div>
+            <div class="api-key-actions">
+                <button id="saveApiKeyBtn" class="search-btn">Save API Key</button>
+                <button id="clearApiKeyBtn" class="location-btn">Clear Stored Key</button>
+                <button id="demoBtn" class="search-btn">Use Demo Data</button>
+            </div>
+        </div>
+        <!-- Search Section -->
+        <div class="search-section">
+            <div class="search-box">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    class="search-input" 
+                    placeholder="Search for a city..."
+                    autocomplete="off"
+                >
+                <button class="search-btn" id="searchBtn">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+            <button class="location-btn" id="locationBtn" title="Use My Location">
+                <i class="fas fa-map-marker-alt"></i> Use My Location
+            </button>
+        </div>
+
+        <!-- Unit Toggle -->
+        <div class="unit-toggle">
+            <button class="unit-btn active" id="celsiusBtn" data-unit="metric">°C</button>
+            <button class="unit-btn" id="fahrenheitBtn" data-unit="imperial">°F</button>
+        </div>
+
+        <!-- Loading Spinner -->
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Loading weather data...</p>
+        </div>
+
+        <!-- Error Message -->
+        <div class="error-message" id="errorMessage"></div>
+
+        <!-- Main Weather Display -->
+        <div class="weather-display" id="weatherDisplay" style="display: none;">
+            <!-- Current Weather Card -->
+            <div class="current-weather">
+                <div class="weather-header">
+                    <div class="location-info">
+                        <h2 id="locationName">--</h2>
+                        <p id="currentDate" class="date-time">--</p>
+                    </div>
+                    <div class="temperature-section">
+                        <div class="weather-icon-large">
+                            <img id="weatherIcon" src="" alt="Weather icon">
+                        </div>
+                        <div class="temperature-info">
+                            <div class="temperature" id="temperature">--°</div>
+                            <p id="weatherDescription" class="description">--</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Weather Details Grid -->
+                <div class="weather-details-grid">
+                    <div class="detail-card">
+                        <div class="detail-icon">
+                            <i class="fas fa-tint"></i>
+                        </div>
+                        <div class="detail-content">
+                            <p class="detail-label">Humidity</p>
+                            <p class="detail-value" id="humidity">--%</p>
+                        </div>
+                    </div>
+
+                    <div class="detail-card">
+                        <div class="detail-icon">
+                            <i class="fas fa-wind"></i>
+                        </div>
+                        <div class="detail-content">
+                            <p class="detail-label">Wind Speed</p>
+                            <p class="detail-value" id="windSpeed">-- m/s</p>
+                        </div>
+                    </div>
+
+                    <div class="detail-card">
+                        <div class="detail-icon">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <div class="detail-content">
+                            <p class="detail-label">Visibility</p>
+                            <p class="detail-value" id="visibility">-- km</p>
+                        </div>
+                    </div>
+
+                    <div class="detail-card">
+                        <div class="detail-icon">
+                            <i class="fas fa-compress"></i>
+                        </div>
+                        <div class="detail-content">
+                            <p class="detail-label">Pressure</p>
+                            <p class="detail-value" id="pressure">-- hPa</p>
+                        </div>
+                    </div>
+
+                    <div class="detail-card">
+                        <div class="detail-icon">
+                            <i class="fas fa-thermometer-half"></i>
+                        </div>
+                        <div class="detail-content">
+                            <p class="detail-label">Feels Like</p>
+                            <p class="detail-value" id="feelsLike">--°</p>
+                        </div>
+                    </div>
+
+                    <div class="detail-card">
+                        <div class="detail-icon">
+                            <i class="fas fa-cloud-rain"></i>
+                        </div>
+                        <div class="detail-content">
+                            <p class="detail-label">Precipitation</p>
+                            <p class="detail-value" id="precipitation">-- mm</p>
+                        </div>
+                    </div>
+
+                    <div class="detail-card">
+                        <div class="detail-icon">
+                            <i class="fas fa-arrow-up"></i>
+                        </div>
+                        <div class="detail-content">
+                            <p class="detail-label">Max Temp</p>
+                            <p class="detail-value" id="maxTemp">--°</p>
+                        </div>
+                    </div>
+
+                    <div class="detail-card">
+                        <div class="detail-icon">
+                            <i class="fas fa-arrow-down"></i>
+                        </div>
+                        <div class="detail-content">
+                            <p class="detail-label">Min Temp</p>
+                            <p class="detail-value" id="minTemp">--°</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Info Section -->
+            <div class="additional-info">
+                <div class="info-card">
+                    <h3><i class="fas fa-sun"></i> Sunrise & Sunset</h3>
+                    <div class="sunrise-sunset">
+                        <div class="sun-item">
+                            <p class="sun-label">Sunrise</p>
+                            <p class="sun-time" id="sunrise">--:--</p>
+                        </div>
+                        <div class="sun-item">
+                            <p class="sun-label">Sunset</p>
+                            <p class="sun-time" id="sunset">--:--</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3><i class="fas fa-eye-slash"></i> UV Index</h3>
+                    <p class="uv-value" id="uvIndex">--</p>
+                    <p class="uv-description" id="uvDescription"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Searches -->
+        <div class="recent-searches" id="recentSearches">
+            <h3>Recent Searches</h3>
+            <div class="recent-list" id="recentList"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
